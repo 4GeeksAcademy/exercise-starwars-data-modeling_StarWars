@@ -78,6 +78,7 @@ class Favorites(Base):
     vehicles_id = Column(Integer, ForeignKey(Vehicles.id))
     planets_id = Column(Integer, ForeignKey(Planets.id))
     characters_id = Column(Integer, ForeignKey(Characters.id))
+    usuario_id = Column(Integer, ForeignKey('Usuario.id'))
     favorites = Column(Enum('personaje', 'vehiculo', 'planeta', name='favorite_type'))
     usuario = relationship("Usuario", back_populates="favorites")
     characters = relationship("Characters", back_populates="favorites")
@@ -94,7 +95,6 @@ class Usuario(Base):
     telefono = Column(String(250))
     celular = Column(String(250))
     fecha_ingreso = Column(String(250))
-    usuario_id = Column(Integer, ForeignKey('Usuario.id'))
     login = relationship("Login", back_populates="usuario")
     favorites = relationship("Favorites", back_populates="usuario")
 
