@@ -69,7 +69,8 @@ class Characters(Base):
     spices = Column(String(250))
     starships = Column(String(250))
     url = Column(String(250))
-    vehicles = Column(String(250), ForeignKey(Vehicles.id))
+    planets = relationship("Planets", back_populates="characters")
+    vehicles = relationship("Vehicles", back_populates="characters")
 
 class Favorites(Base):
     __tablename__ = 'Favorites'
@@ -78,6 +79,10 @@ class Favorites(Base):
     planets_id = Column(Integer, ForeignKey(Planets.id))
     characters_id = Column(Integer, ForeignKey(Characters.id))
     favorites = Column(Enum('personaje', 'vehiculo', 'planeta', name='favorite_type'))
+    Usuario = relationship("Usuario", back_populates="favorites")
+    characters = relationship("Characters", back_populates="favorites")
+    planets = relationship("Planets", back_populates="favorites")
+    vehicles = relationship("Vehicles", back_populates="favorites")
 
 class Usuario(Base):
     __tablename__ = 'Usuario'
@@ -89,7 +94,9 @@ class Usuario(Base):
     telefono = Column(String(250))
     celular = Column(String(250))
     fecha_ingreso = Column(String(250))
+    usuario_id = Column(Integer, ForeignKey('Usuario.id'))
     login = relationship("Login", back_populates="usuario")
+    favorites = relationship("Favorites", back_populates="usuario")
 
 class Login(Base):
     __tablename__ = 'Login'
@@ -99,7 +106,14 @@ class Login(Base):
     usuario_id = Column(String(250), ForeignKey(Usuario.id))
     usuario = relationship("Usuario", back_populates="login")
     
-
+class FavoritePlanets(Base):
+    __tablename__ = 'FavoritePlanets'
+    id = Column(Integer, primary_key=True)
+    favorites_id = Column(Integer, ForeignKey('Favorites.id'))
+    planets_id = Column(Integer, ForeignKey('Planets.id'))
+    favorites = relationship("Favorites", back_populates="favorite_planets")
+    planet = relationship("Planets", back_populates="favorite_planets")
+    Favorites.favorite_planets = relationship("FavoritePlanets", back_populates="favorites")
 
     def to_dict(self):
         return {}
