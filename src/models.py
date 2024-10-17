@@ -67,7 +67,7 @@ class Characters(Base):
     created = Column(String(250))
     edited = Column(String(250))
     spices = Column(String(250))
-    starships = Column(String(250))
+    starships = Column(String(250), ForeignKey(Vehicles.id))
     url = Column(String(250))
     planets = relationship("Planets", back_populates="characters")
     vehicles = relationship("Vehicles", back_populates="characters")
@@ -75,15 +75,9 @@ class Characters(Base):
 class Favorites(Base):
     __tablename__ = 'Favorites'
     id = Column(Integer, primary_key=True)
-    vehicles_id = Column(Integer, ForeignKey(Vehicles.id))
-    planets_id = Column(Integer, ForeignKey(Planets.id))
-    characters_id = Column(Integer, ForeignKey(Characters.id))
     usuario_id = Column(Integer, ForeignKey('Usuario.id'))
     favorites = Column(Enum('personaje', 'vehiculo', 'planeta', name='favorite_type'))
     usuario = relationship("Usuario", back_populates="favorites")
-    characters = relationship("Characters", back_populates="favorites")
-    planets = relationship("Planets", back_populates="favorites")
-    vehicles = relationship("Vehicles", back_populates="favorites")
 
 class Usuario(Base):
     __tablename__ = 'Usuario'
@@ -105,7 +99,25 @@ class Login(Base):
     password = Column(String(250))
     usuario_id = Column(String(250), ForeignKey(Usuario.id))
     usuario = relationship("Usuario", back_populates="login")
-    
+
+class FavoriteCharacters(Base):
+    __tablename__ = 'favoriteCharacters'
+    id = Column(Integer, primary_key=True)
+    favorites_id = Column(Integer, ForeignKey('Favorites.id'))
+    characters_id = Column(Integer, ForeignKey('Characters.id'))
+    favorites = relationship("Favorites", back_populates="favorite_characters")
+    planet = relationship("Planets", back_populates="favorite_characters")
+    Favorites.favorite_characters = relationship("favoriteCharacters", back_populates="favorites")
+
+class FavoriteVehicles(Base):
+    __tablename__ = 'FavoriteVehicles'
+    id = Column(Integer, primary_key=True)
+    favorites_id = Column(Integer, ForeignKey('Favorites.id'))
+    vehicles_id = Column(Integer, ForeignKey('Vehicles.id'))
+    favorites = relationship("Favorites", back_populates="favorite_vehicles")
+    vehicles = relationship("Planets", back_populates="favorite_vehicles")
+    Favorites.favorite_vehicles = relationship("FavoriteVehicles", back_populates="favorites")
+
 class FavoritePlanets(Base):
     __tablename__ = 'FavoritePlanets'
     id = Column(Integer, primary_key=True)
