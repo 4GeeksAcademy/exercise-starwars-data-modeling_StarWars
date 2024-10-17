@@ -79,7 +79,7 @@ class Favorites(Base):
     planets_id = Column(Integer, ForeignKey(Planets.id))
     characters_id = Column(Integer, ForeignKey(Characters.id))
     favorites = Column(Enum('personaje', 'vehiculo', 'planeta', name='favorite_type'))
-    Usuario = relationship("Usuario", back_populates="favorites")
+    usuario = relationship("Usuario", back_populates="favorites")
     characters = relationship("Characters", back_populates="favorites")
     planets = relationship("Planets", back_populates="favorites")
     vehicles = relationship("Vehicles", back_populates="favorites")
